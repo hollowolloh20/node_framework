@@ -14,7 +14,16 @@ router
       })
     );
   })
-  .useBefore([new Middle(), new Middle2()])
-  .useAfter([new Middle3(), new Middle4()]);
+  .useBefore([new Middle()]);
+
+router
+  .get('/index2', (ctx) => {
+    ctx.response.send(
+      JSON.stringify({
+        result: 'success',
+      })
+    );
+  })
+  .useBefore([new Middle2()]);
 
 export default router;

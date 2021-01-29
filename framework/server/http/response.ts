@@ -12,6 +12,11 @@ class Response {
     return this._response;
   }
 
+  public status(value: number): Response {
+    this._response.statusCode = value;
+    return this;
+  }
+
   public send(value: any): void {
     this._response.end(value);
   }

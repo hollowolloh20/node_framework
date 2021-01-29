@@ -1,8 +1,10 @@
-import { SessionProviderContract } from './';
+import { SessionProviderContract } from './session';
 
 export interface RedisClient {
-  get: Function;
   set: Function;
+  setex: Function;
+  get: Function;
+  expire: Function;
 }
 
 class RedisSession implements SessionProviderContract {
@@ -12,25 +14,37 @@ class RedisSession implements SessionProviderContract {
     this._client = client;
   }
 
-  public get(key: string): Promise<Error | any> {
+  public set(key: string | number, value: string): Promise<Error | boolean> {
+    return new Promise((resolve, reject) => {
+      this._client.set(key, value, (error) => {
+        this.checkError(error, reject);
+        resolve(true);
+      });
+    });
+  }
+
+  public get(key: string | number): Promise<Error | any> {
     return new Promise((resolve, reject) => {
       this._client.get(key, (error: Error, response: any) => {
-        if (error) {
-          reject(error);
-        }
+        this.checkError(error, reject);
         resolve(JSON.parse(response));
       });
     });
   }
 
-  public set(key: string, value: object): Promise<Error | any> {
-    return new Promise((_resolve, reject) => {
-      this._client.set(key, JSON.stringify(value), (error) => {
-        if (error) {
-          reject(error);
-        }
+  public init(key: string | number, value: string, expire: number): Promise<Error | boolean> {
+    return new Promise((resolve, reject) => {
+      this._client.setex(key, expire, value, (error) => {
+        this.checkError(error, reject);
+        resolve(true);
       });
     });
+  }
+
+  private checkError(error: any, reject: Function): void {
+    if (error) {
+      reject(error);
+    }
   }
 }
 

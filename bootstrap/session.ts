@@ -9,6 +9,8 @@ const redisSession = new RedisSession(client);
 const session: Session = {
   idName: 'ssid',
   idGenerator: uuidv4,
+  expire: 10,
+  httpOnly: true,
   provider: redisSession,
 };
 

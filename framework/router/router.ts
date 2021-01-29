@@ -53,14 +53,19 @@ class Router implements RouterContract, HttpRequests {
 
   public handle(ctx: any): void {
     const route: RouteContract = this._routes[ctx.request.pathname];
-    const controllerSettings: ControllerSettings = {
-      data: ctx,
-      handler: route.getHandler(),
-      beforeMiddlewares: route.getBeforeMiddleware(),
-      afterMiddlewares: route.getAfterMiddleware(),
-    };
 
-    useController(controllerSettings);
+    if (route) {
+      const controllerSettings: ControllerSettings = {
+        data: ctx,
+        handler: route.getHandler(),
+        beforeMiddlewares: route.getBeforeMiddleware(),
+        afterMiddlewares: route.getAfterMiddleware(),
+      };
+
+      useController(controllerSettings);
+    } else {
+      ctx.response.status(404).send();
+    }
   }
 }
 

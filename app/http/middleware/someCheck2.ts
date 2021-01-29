@@ -2,15 +2,12 @@ import { BeforeMiddleware } from '../../../framework/interfaces';
 
 class SomeCheck implements BeforeMiddleware {
   public async handle(ctx: any, next: Function): Promise<void> {
-    const rand = Math.floor(Math.random() * Math.floor(10));
-    console.log(`Before 2: ${rand}`);
-
-    if (rand >= 5) {
-      ctx.response.send(
-        JSON.stringify({
-          result: false,
-        })
-      );
+    const t = await ctx.session.get();
+    if (t) {
+      console.log(t);
+      t.coool += t.coool;
+      await ctx.session.set(t);
+      ctx.response.send(JSON.stringify(await ctx.session.get()));
     } else {
       next();
     }

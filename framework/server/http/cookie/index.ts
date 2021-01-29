@@ -1,7 +1,7 @@
 import { parse } from 'cookie';
 
 export interface CookieContract {
-  get(): any;
+  get(): object | undefined | any;
   set(value: string | number | boolean): void;
 }
 
@@ -9,7 +9,6 @@ class Cookie implements CookieContract {
   protected _req: any;
   protected _res: any;
   protected _cookies: string | object | undefined | any;
-  protected _responseCookies: Array<string> = [];
 
   public constructor(req: any, res: any) {
     this._req = req;
@@ -24,13 +23,8 @@ class Cookie implements CookieContract {
   }
 
   public set(value: string): void {
-    this._responseCookies.push(value);
-    this._res.setHeader('Set-Cookie', this.toString());
+    this._res.setHeader('Set-Cookie', value);
   }
-
-  public toString = (): string => {
-    return this._responseCookies.join('; ');
-  };
 }
 
 export default Cookie;

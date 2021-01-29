@@ -4,15 +4,15 @@ export interface RouteContract {
   setHandler(controllerHandler: Function): void;
   getHandler(): Function;
   useBefore(middlewares: Array<BeforeMiddleware>): RouteContract;
-  getBeforeMiddleware(): Array<BeforeMiddleware>;
+  getBeforeMiddleware(): Array<BeforeMiddleware> | undefined;
   useAfter(middlewares: Array<AfterMiddleware>): RouteContract;
-  getAfterMiddleware(): Array<AfterMiddleware>;
+  getAfterMiddleware(): Array<AfterMiddleware> | undefined;
 }
 
 class Route implements RouteContract {
   protected _controllerHandler: Function;
-  protected _beforeMiddleware: Array<BeforeMiddleware>;
-  protected _afterMiddleware: Array<AfterMiddleware>;
+  protected _beforeMiddleware: Array<BeforeMiddleware> | undefined;
+  protected _afterMiddleware: Array<AfterMiddleware> | undefined;
 
   public setHandler(controllerHandler: Function): void {
     this._controllerHandler = controllerHandler;
@@ -27,7 +27,7 @@ class Route implements RouteContract {
     return this;
   }
 
-  public getBeforeMiddleware(): Array<BeforeMiddleware> {
+  public getBeforeMiddleware(): Array<BeforeMiddleware> | undefined {
     return this._beforeMiddleware;
   }
 
@@ -36,7 +36,7 @@ class Route implements RouteContract {
     return this;
   }
 
-  public getAfterMiddleware(): Array<AfterMiddleware> {
+  public getAfterMiddleware(): Array<AfterMiddleware> | undefined {
     return this._afterMiddleware;
   }
 }

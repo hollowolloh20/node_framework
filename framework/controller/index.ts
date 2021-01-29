@@ -3,17 +3,17 @@ import { BeforeMiddleware, AfterMiddleware } from '../interfaces';
 export type Settings = {
   data: any;
   handler: Function;
-  beforeMiddlewares: Array<BeforeMiddleware>;
-  afterMiddlewares: Array<AfterMiddleware>;
+  beforeMiddlewares: Array<BeforeMiddleware> | undefined;
+  afterMiddlewares: Array<AfterMiddleware> | undefined;
 };
 
 async function useController(settings: Settings): Promise<void> {
   const data: any = settings.data;
-  const enabledBeforeMiddlewares: boolean = !!settings.beforeMiddlewares.length;
+  const beforeMiddlewares: Array<BeforeMiddleware> | undefined = settings.beforeMiddlewares;
   let successBeforeMiddlewares: boolean = true;
 
-  if (enabledBeforeMiddlewares) {
-    successBeforeMiddlewares = await executeBeforeMiddlewares(data, settings.beforeMiddlewares);
+  if (beforeMiddlewares) {
+    successBeforeMiddlewares = await executeBeforeMiddlewares(data, beforeMiddlewares);
   }
 
   if (successBeforeMiddlewares) {
@@ -23,7 +23,11 @@ async function useController(settings: Settings): Promise<void> {
       await controllerHandler;
     }
 
-    executeAfterMiddlewares(data, settings.afterMiddlewares);
+    const afterMiddlewares: Array<AfterMiddleware> | undefined = settings.afterMiddlewares;
+
+    if (afterMiddlewares) {
+      executeAfterMiddlewares(data, afterMiddlewares);
+    }
   }
 }
 
