@@ -1,3 +1,6 @@
+import { ControllerExtension } from './controller';
+import { RouterContract, RouterHttpRequests } from './router';
 import { BeforeMiddleware, AfterMiddleware } from './middleware';
+import { Objectable } from './objectable';
 
-export { BeforeMiddleware, AfterMiddleware };
+export { ControllerExtension, RouterContract, RouterHttpRequests, BeforeMiddleware, AfterMiddleware, Objectable };

@@ -1,3 +1,3 @@
-import Router, { RouterContract } from './router';
+import Router from './router';
 
-export { RouterContract, Router };
+export { Router };

@@ -1,4 +1,4 @@
-import { RouterContract } from '../router';
+import { RouterContract } from '../interfaces';
 import { Session } from './';
 
 export interface ConfigContract {
