@@ -36,4 +36,15 @@ router
   })
   .useBefore([new Middle3()]);
 
+router
+  .get('/index4', (ctx) => {
+    ctx.response.send(
+      JSON.stringify({
+        result: 'success',
+      })
+    );
+  })
+  .useBefore([new Middle3(), new Middle3()])
+  .useAfter([new Middle4(), new Middle4()]);
+
 export default router;

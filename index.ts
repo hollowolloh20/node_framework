@@ -9,15 +9,3 @@ config.setSession(session);
 
 const server = http.createServer(listener);
 server.listen(3000);
-
-/*import RedisSession from './framework/server/http/session/redis';
-import { createClient } from 'redis';
-
-const client = createClient();
-const session = new RedisSession(client);
-
-session.set('test', { hello: 'yo' });
-
-setTimeout(async () => {
-  console.log(await session.get('test'));
-}, 1000);*/

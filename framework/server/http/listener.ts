@@ -3,6 +3,8 @@ import Response from './response';
 import Cookie from './cookie';
 import config from '../../provider/settings/config';
 import { Session } from './session';
+import { RouterContract } from '../../interfaces';
+import { throwHttpExceptionResponse } from '../../exception';
 
 const requestTypeWithoutBody: Array<string> = ['GET', 'OPTIONS', 'TRACE', 'CONNECT'];
 
@@ -32,9 +34,7 @@ function handleRequest(ctx: any, req: any, res: any) {
   const router = config.getRouter();
 
   if (requestTypeWithoutBody.includes(req.method)) {
-    ctx.request = request;
-    ctx.response = response;
-    router.handle(ctx);
+    setCtxAndRunRouter(ctx, request, response, router);
   } else {
     let body: string = '';
     req.on('data', (chunk: string) => {
@@ -42,10 +42,19 @@ function handleRequest(ctx: any, req: any, res: any) {
     });
     req.on('end', () => {
       request.body = body;
-      ctx.request = request;
-      ctx.response = response;
-      router.handle(ctx);
+      setCtxAndRunRouter(ctx, request, response, router);
     });
+  }
+}
+
+function setCtxAndRunRouter(ctx: any, request: Request, response: Response, router: RouterContract) {
+  ctx.request = request;
+  ctx.response = response;
+
+  try {
+    router.handle(ctx);
+  } catch (e) {
+    throwHttpExceptionResponse(ctx.response, e);
   }
 }
 
